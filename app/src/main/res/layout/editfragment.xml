@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:id="@+id/mVideo_text"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_gravity="center"
+            android:text="请选择视频文件"
+            android:textSize="65px"
+            android:textAlignment="center"/>
+        <Button
+            android:id="@+id/video_button"
+            android:layout_width="wrap_content"
+            android:layout_height="105px"
+            android:background="@drawable/shapebutton"
+            android:text="视频"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/mAudio_text"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_gravity="center"
+            android:text="请选择音频文件"
+            android:textSize="65px"
+            android:textAlignment="center"/>
+        <Button
+            android:id="@+id/audio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="105px"
+            android:background="@drawable/shapebutton"
+            android:text="音频"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+</LinearLayout>
