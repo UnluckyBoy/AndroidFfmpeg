@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
-//#include <libavcodec/avcodec.h>
+#include <libavcodec/jni.h>
+
 extern "C"{
 #include <libavcodec/avcodec.h>
 }
@@ -11,7 +12,7 @@ extern "C"{
  */
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_example_androidffmpeg_ui_Activity_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
+Java_com_example_androidffmpeg_ui_Fragment_MainFragment_stringFromJNI(JNIEnv *env, jobject thiz) {
     // TODO: implement stringFromJNI()
     std::string ffmpegStr=avcodec_configuration();
     std::string hello = "Hello from C++\n"+ffmpegStr;
@@ -19,9 +20,7 @@ Java_com_example_androidffmpeg_ui_Activity_MainActivity_stringFromJNI(JNIEnv *en
 }
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_example_androidffmpeg_ui_Fragment_MainFragment_stringFromJNI(JNIEnv *env, jobject thiz) {
-    // TODO: implement stringFromJNI()
-    std::string ffmpegStr=avcodec_configuration();
-    std::string hello = "Hello from C++\n"+ffmpegStr;
-    return env->NewStringUTF(hello.c_str());
+Java_com_example_androidffmpeg_ui_Fragment_EditFragment_getVersion(JNIEnv *env, jobject thiz) {
+    // TODO: implement getVersion()
+    return env->NewStringUTF(av_version_info());
 }

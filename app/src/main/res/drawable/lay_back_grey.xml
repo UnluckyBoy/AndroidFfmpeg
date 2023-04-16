@@ -3,5 +3,5 @@
     <!--圆角弧度-->
     <corners android:radius="10dp"/>
     <!--填充颜色-->
-    <solid android:color="@color/md_teal_A100"/>
+    <solid android:color="@color/md_teal_100"/>
 </shape>

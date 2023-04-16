@@ -69,9 +69,9 @@ add_library( # Sets the name of the library.
 add_library( ffmpeg
         SHARED
         IMPORTED )
-set_target_properties( ffmpeg
+set_target_properties(ffmpeg
         PROPERTIES IMPORTED_LOCATION
-        ${LIB_PATH}/${CMAKE_ANDROID_ARCH_ABI}/libffmpeg.so )
+        ${LIB_PATH}/${CMAKE_ANDROID_ARCH_ABI}/libffmpeg.so)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 # Searches for a specified prebuilt library and stores the path as a

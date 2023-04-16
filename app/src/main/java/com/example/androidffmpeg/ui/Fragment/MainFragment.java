@@ -12,6 +12,7 @@ import com.example.androidffmpeg.R;
 
 public class MainFragment extends Fragment {
     //private ActivityMainBinding binding;
+
     private View view;
     private String args=null;
 
@@ -56,8 +57,9 @@ public class MainFragment extends Fragment {
 
         TextView tv = view.findViewById(R.id.main_fragment_text);
         tv.setText(stringFromJNI());
-        Log.i("",stringFromJNI());
     }
-
+    /**
+     * @return 返回当前
+     */
     public native String stringFromJNI();
 }

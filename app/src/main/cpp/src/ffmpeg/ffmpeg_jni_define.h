@@ -19,15 +19,15 @@ extern "C" { \
     (JNIEnv *env, jobject thiz, ##__VA_ARGS__)\
 
 #define FFMPEG_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
-    JNIEXPORT RETURN_TYPE JNICALL Java_com_frank_ffmpeg_FFmpegCmd_ ## FUNC_NAME \
+    JNIEXPORT RETURN_TYPE JNICALL Java_com_example_androidffmpeg_FfmpegCmd_ ## FUNC_NAME \
     (JNIEnv *env, jclass thiz, ##__VA_ARGS__)\
 
 #define FFPROBE_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
 extern "C" { \
-    JNIEXPORT RETURN_TYPE JNICALL Java_com_frank_ffmpeg_FFmpegCmd_ ## FUNC_NAME \
+    JNIEXPORT RETURN_TYPE JNICALL ava_com_example_androidffmpeg_FfmpegCmd_ ## FUNC_NAME \
     (JNIEnv *env, jclass thiz, ##__VA_ARGS__);\
 }\
-    JNIEXPORT RETURN_TYPE JNICALL Java_com_frank_ffmpeg_FFmpegCmd_ ## FUNC_NAME \
+    JNIEXPORT RETURN_TYPE JNICALL ava_com_example_androidffmpeg_FfmpegCmd_ ## FUNC_NAME \
     (JNIEnv *env, jclass thiz, ##__VA_ARGS__)\
 
 #define VIDEO_PLAYER_FUNC(RETURN_TYPE, FUNC_NAME, ...) \

@@ -2,7 +2,7 @@
 #include "ffmpeg/ffmpeg.h"
 #include "ffmpeg_jni_define.h"
 
-#define FFMPEG_TAG "FFmpegCmd"
+#define FFMPEG_TAG "FfmpegCmd"
 #define INPUT_SIZE (4 * 1024)
 
 #define ALOGI(TAG, FORMAT, ...) __android_log_vprint(ANDROID_LOG_INFO, TAG, FORMAT, ##__VA_ARGS__);
@@ -19,9 +19,9 @@ void log_callback(void *, int, const char *, va_list);
 void init(JNIEnv *env) {
     ff_env = env;
     err_count = 0;
-    ff_class = (*env)->FindClass(env, "com/frank/ffmpeg/FFmpegCmd");
+    ff_class = (*env)->FindClass(env, "com/example/androidffmpeg/FfmpegCmd");
     ff_method = (*env)->GetStaticMethodID(env, ff_class, "onProgressCallback", "(III)V");
-    msg_method = (*env)->GetStaticMethodID(env, ff_class, "onMsgCallback", "(Ljava/lang/String;)V");
+    msg_method = (*env)->GetStaticMethodID(env, ff_class, "onMsgCallback", "(Ljava/lang/String;I)V");
 }
 
 FFMPEG_FUNC(jint, handle, jobjectArray commands) {
@@ -56,12 +56,15 @@ FFMPEG_FUNC(void, cancelTaskJni, jint cancel) {
     cancel_task(cancel);
 }
 
-void msg_callback(const char *format, va_list args) {
+void msg_callback(const char *format, va_list args, int level) {
     if (ff_env && msg_method) {
         char *ff_msg = (char *) malloc(sizeof(char) * INPUT_SIZE);
+        if (!ff_msg)
+            return;
         vsprintf(ff_msg, format, args);
         jstring jstr = (*ff_env)->NewStringUTF(ff_env, ff_msg);
-        (*ff_env)->CallStaticVoidMethod(ff_env, ff_class, msg_method, jstr);
+        if (jstr)
+            (*ff_env)->CallStaticVoidMethod(ff_env, ff_class, msg_method, jstr, level);
         free(ff_msg);
     }
 }
@@ -71,14 +74,14 @@ void log_callback(void *ptr, int level, const char *format, va_list args) {
         case AV_LOG_INFO:
             ALOGI(FFMPEG_TAG, format, args);
             if (format && strncmp("silence", format, 7) == 0) {
-                msg_callback(format, args);
+                msg_callback(format, args, 3);
             }
             break;
         case AV_LOG_ERROR:
             ALOGE(FFMPEG_TAG, format, args);
             if (err_count < 10) {
                 err_count++;
-                msg_callback(format, args);
+                msg_callback(format, args, 6);
             }
             break;
         default:

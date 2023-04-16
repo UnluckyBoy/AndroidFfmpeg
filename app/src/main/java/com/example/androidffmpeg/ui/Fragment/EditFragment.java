@@ -8,12 +8,15 @@ import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +26,13 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.androidffmpeg.FfmpegCmd;
 import com.example.androidffmpeg.R;
+import com.example.androidffmpeg.Tools.lister.OnHandleListener;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,9 +44,10 @@ public class EditFragment extends Fragment {
     private View view;
     private String args = null;
     private TextView mVideo_Text, mAudio_Text;
-    private Button mVideo_Button, mAudio_Button;
+    private Button mVideo_Btn, mAudio_Btn,mBuild_Btn;
+    private String mBtnType=null;
+    private String video_name,audio_name,out_name="Out.mp4";
 
-    String path =null;
     public static EditFragment newInstance(String param1) {
         EditFragment fragment = new EditFragment();
         Bundle args = new Bundle();
@@ -90,30 +98,62 @@ public class EditFragment extends Fragment {
 
         mVideo_Text = view.findViewById(R.id.mVideo_text);
         mAudio_Text = view.findViewById(R.id.mAudio_text);
-        mVideo_Button = view.findViewById(R.id.video_button);
-        mAudio_Button = view.findViewById(R.id.audio_button);
-        //intoFileManager();
-        GetVideoFile();
+        mVideo_Btn = view.findViewById(R.id.video_button);
+        mAudio_Btn = view.findViewById(R.id.audio_button);
+        mBuild_Btn= view.findViewById(R.id.build_video);
+
+        mVideo_Btn.setOnClickListener(new BtnClickListener());
+        mAudio_Btn.setOnClickListener(new BtnClickListener());
+        mBuild_Btn.setOnClickListener(new BtnClickListener());
     }
 
-    /**
-     * 按钮函数
-     */
-    private void GetVideoFile() {
-        mVideo_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntoFileManager();
+    private class BtnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.video_button:
+                    IntoFileManager();
+                    mBtnType="video";
+                    break;
+                case R.id.audio_button:
+                    IntoFileManager();
+                    mBtnType="audio";
+                    break;
+                case R.id.build_video:
+                    //Toast.makeText(view.getContext(),"Ffmpeg版本:"+getVersion(),Toast.LENGTH_SHORT).show();
+                    String concatAudioCmd = "ffmpeg -i %s -i %s -codec copy %s";
+                    String[] temp = String.format(concatAudioCmd,video_name,audio_name,out_name).split(" ");
+                    //Toast.makeText(view.getContext(),temp.toString(),Toast.LENGTH_SHORT).show();
+//                    FfmpegCmd.execute(temp, new OnHandleListener() {
+//                        @Override
+//                        public void onBegin() {
+//                            Toast.makeText(view.getContext(),"开始",Toast.LENGTH_SHORT).show();
+//                        }
+//                        @Override
+//                        public void onMsg(String msg) {
+//
+//                        }
+//                        @Override
+//                        public void onProgress(int progress, int duration) {
+//
+//                        }
+//                        @Override
+//                        public void onEnd(int resultCode, String resultMsg) {
+//                            Toast.makeText(view.getContext(),"结束",Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                    break;
             }
-        });
+        }
     }
+
+    public native String getVersion();//回调C++接口
+
 
     /**
      * 打开文件夹
      **/
     private void IntoFileManager() {
-        //GetPermission_data(getActivity());
-
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");//筛选器
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -123,54 +163,26 @@ public class EditFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            try {
-                Uri uri = data.getData();//获取URI
-                StringBuilder result = new StringBuilder();//保存读取到的内容
-                InputStream is = getContext().getContentResolver().openInputStream(uri);//获取输入流
-                //创建用于字符输入流中读取文本的bufferReader对象
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    //将读取到的内容放入结果字符串
-                    result.append(line);
-                }
-                //文件中的内容
-                String content = is.toString();
-                Toast.makeText(getActivity(),"获取的文件内容:"+content,Toast.LENGTH_SHORT).show();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            //Uri uri = data.getData();//获取URI
+            //Toast.makeText(getActivity(),"获取的文件内容:"+uri.getPath(),Toast.LENGTH_SHORT).show();
+            GetFileName(data.getData());
+       }
+    }
+
+    private void GetFileName(Uri uri){
+        DocumentFile documentFile = DocumentFile.fromSingleUri(view.getContext(), uri);
+        if (documentFile != null){
+            //Toast.makeText(getActivity(),"获取的文件内容:"+documentFile.getName(),Toast.LENGTH_SHORT).show();
+            switch (mBtnType){
+                case "video":
+                    mVideo_Text.setText(documentFile.getName());
+                    video_name=documentFile.getName();
+                    break;
+                case "audio":
+                    mAudio_Text.setText(documentFile.getName());
+                    audio_name=documentFile.getName();
+                    break;
             }
         }
     }
-
-
-//    /**
-//     * 获取data权限
-//     */
-//    public void GetPermission_data(Activity activity) {
-//        Uri uri = Uri.parse("content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fdata");
-//        DocumentFile documentFile = DocumentFile.fromTreeUri(activity, uri);
-//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-//        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-//                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-//                | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-//        //assert documentFile != null;
-//        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentFile.getUri());
-//        //intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri);
-//        activity.startActivityForResult(intent, REQUEST_CODE_FOR_DIR);
-//    }
-//
-//    @SuppressLint("WrongConstant")
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Uri uri;
-//        if (requestCode == REQUEST_CODE_FOR_DIR && (uri = data.getData()) != null) {
-//            getActivity().getContentResolver().takePersistableUriPermission(uri, data.getFlags()&
-//                    (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION));
-//        }
-//    }
 }
