@@ -53,4 +53,8 @@ dependencies {
     //添加导航栏依赖
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
     implementation "androidx.documentfile:documentfile:1.0.1"
+    //implementation 'com.google.android.material:material:1.8.0'
+
+    //文件库
+    implementation 'androidx.documentfile:documentfile:1.0.1'
 }

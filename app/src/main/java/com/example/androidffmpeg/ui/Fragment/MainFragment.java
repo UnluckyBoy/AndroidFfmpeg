@@ -1,6 +1,6 @@
 package com.example.androidffmpeg.ui.Fragment;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,23 +13,14 @@ import com.example.androidffmpeg.R;
 public class MainFragment extends Fragment {
     //private ActivityMainBinding binding;
     private View view;
-    private String agrs1=null;
+    private String args=null;
 
     public static MainFragment newInstance(String param1) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putString("agrs1", param1);
+        args.putString("args", param1);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public MainFragment() {
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -44,11 +35,10 @@ public class MainFragment extends Fragment {
             view = inflater.inflate(R.layout.mainfragment, container, false);
 
             Bundle bundle = getArguments();
-            agrs1 = bundle.getString("agrs1");
+            args = bundle.getString("args");
             //执行Fragment视图数据初始化
             InitFragmentData(view);
         }
-
         return view;
     }
 

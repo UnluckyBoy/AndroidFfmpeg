@@ -11,6 +11,8 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import java.io.File;
+
 public class FileUtil {
     private static Context context;
     private static FileUtil util = null;
@@ -28,7 +30,6 @@ public class FileUtil {
 
     /**
      * 对外接口  获取uri对应的路径
-     *
      * @param uri
      * @return
      */
@@ -166,5 +167,11 @@ public class FileUtil {
      */
     private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static void createDir(Context context) {
+        //String dirPath = "/sdcard/Matrix_Ffmpeg";
+        String dirPath =context.getExternalFilesDir(null)+"/Matrix_Ffmpeg";
+        File mPath = new File(dirPath);
     }
 }

@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">神奇解码</string>
+    <string name="app_name">Ffmpeg</string>
+
+    <string name="mainIcon">主页</string>
+    <string name="chatIcon">论坛</string>
+    <string name="userIcon">我的</string>
+    <string name="NetworkFailure">404!网络错误,请检查当前网络!</string>
+    <string name="ResponseBodyNull">403!意料之外的错误,稍后技术人员将进行排查!!!</string>
+    <string name="userInfoError">账户或密码错误,请检查！</string>
+    <string name="Confirm">确定</string>
+    <string name="Cancel">取消</string>
+    <string name="Other_login">第三方登录</string>
+    <string name="SystemTitle">系统提示</string>
+    <string name="SaveTitle">是否保存?</string>
+    <string name="loginTitle">尚未登录,是否登录?\n取消,则以游客身份使用</string>
+    <string name="cancelLogin">是否放弃登录?</string>
+    <string name="cancelRegister">是否放弃注册?</string>
+    <string name="accountIsRegis">此号已注册！</string>
+    <string name="pwdConfirmError">前后输入密码错误,请检查！</string>
 </resources>
